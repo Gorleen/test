@@ -1,0 +1,22 @@
+- name: Deploy simple website using Apache2
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Install Apache2
+      ansible.builtin.apt:
+        name: apache2
+        state: present
+        update_cache: yes
+    - name: Copy index.html to Apache root
+      ansible.builtin.copy:
+        src: /home/ubuntu/html/index.html
+        dest: /var/www/html/index.html
+        owner: www-data
+        group: www-data
+        mode: "0644"
+    - name: Ensure Apache is started and enabled
+      ansible.builtin.service:
+        name: apache2
+        state: started
+        enabled: yes
